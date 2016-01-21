@@ -2,7 +2,7 @@
 import argparse, csv, sys
 parser = argparse.ArgumentParser()
 parser.add_argument('filename', metavar='FILE', type=str,help='Specify a file name')
-parser.add_argument('-t','--type',type=str,help='Specify the dump type (pony,keybase)')
+parser.add_argument('-t','--type',type=str,required=True,help='Specify the dump type (pony,keybase)')
 parser.add_argument('-d','--delimiter',type=str,help='Specify a delimiter (default is comma)')
 parser.add_argument('-q','--qualifier',type=str,help='Specify a text qualifier to surround the fields (default is double quotes)')
 parser.add_argument('-o','--outfile',type=str,help='Specify an output file, otherwise defaults to STDOUT')
