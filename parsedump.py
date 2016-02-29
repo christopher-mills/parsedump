@@ -28,7 +28,9 @@ for line in f:
 		password=line.rpartition(' ')[2].rstrip('\n')
 		user=line.rpartition(' ')[0].rpartition(' ')[2]
 	if args.type == 'phisher':
-		# This format is: Time#username#:#IPAddr#UserAgent#Site
+                # This format is: Time#username#:#IPAddr#UserAgent#Site
+                if line.count('#') < 4:
+                        continue
 		linesplit=line.split('#')
 		user=linesplit[1]
 		password=linesplit[2]
