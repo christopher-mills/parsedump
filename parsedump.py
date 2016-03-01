@@ -2,7 +2,7 @@
 import argparse, csv, sys
 parser = argparse.ArgumentParser()
 parser.add_argument('filename', metavar='FILE', type=str,help='Specify a file name')
-parser.add_argument('-t','--type',type=str,required=True,help='Specify the dump type (pony,keybase,phisher)')
+parser.add_argument('-t','--type',type=str,required=True,help='Specify the dump type (pony,keybase,phisher,pinterest)')
 parser.add_argument('-d','--delimiter',type=str,help='Specify a delimiter (default is comma)')
 parser.add_argument('-q','--qualifier',type=str,help='Specify a text qualifier to surround the fields (default is double quotes)')
 parser.add_argument('-o','--outfile',type=str,help='Specify an output file, otherwise defaults to STDOUT')
@@ -34,6 +34,12 @@ for line in f:
 		linesplit=line.split('#')
 		user=linesplit[1]
 		password=linesplit[2]
+	if args.type == 'pinterest':
+		if "EMAIL->" in line:
+			user=line.partition('->')[2].rstrip()
+			password=f.next().rstrip()
+		else:
+			continue
 	# Dunno how to program the output without the if-statement.
         if args.outfile:
         	dumpwriter = csv.writer(outfile,delimiter=delimiter,quotechar=qualifier,quoting=csv.QUOTE_MINIMAL)
