@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import argparse, csv, sys
+import argparse, csv, sys, re
 parser = argparse.ArgumentParser()
 parser.add_argument('filename', metavar='FILE', type=str,help='Specify a file name')
 parser.add_argument('-t','--type',type=str,required=True,help='Specify the dump type (pony,keybase,phisher,phisher2,pinterest)')
@@ -34,6 +34,8 @@ for line in f:
 		linesplit=line.split('#')
 		user=linesplit[1]
 		password=linesplit[2]
+		if len(user) < 1:
+			continue
         if args.type == 'phisher2':
                 # This format is: Username,Password#IPAddress#Hostname - UserAgent
                 if line.count('#') < 2:
@@ -42,15 +44,30 @@ for line in f:
                 userpass=linesplit[0]
 		user=userpass.split(',')[0]
                 password=userpass.split(',')[1]
+        if args.type == 'phisher3':
+                # This format is: Username,Password#IPAddress#Hostname - UserAgent
+                if line.count('#') < 2:
+                        continue
+		notimestamp=line.split(' ')[1]
+                linesplit=notimestamp.split('#')
+                userpass=linesplit[0]
+                user=userpass.split(',')[0]
 	if args.type == 'pinterest':
 		if "EMAIL->" in line:
 			user=line.partition('->')[2].rstrip()
 			password=f.next().rstrip()
 		else:
 			continue
-	# Dunno how to program the output without the if-statement.
+	if args.type == 'zain':
+		linesplit=line.split(",")
+		user=linesplit[0]
+		password=linesplit[1].rstrip()
+		m = re.split(r'\d+$',user)
+		user=m[0].rstrip()
+		if user[0].isdigit():
+			user=user[1:]
         if args.outfile:
         	dumpwriter = csv.writer(outfile,delimiter=delimiter,quotechar=qualifier,quoting=csv.QUOTE_MINIMAL)
-        else:
-                dumpwriter = csv.writer(sys.stdout,delimiter=delimiter,quotechar=qualifier,quoting=csv.QUOTE_MINIMAL)
-        dumpwriter.writerow([user,password])
+	else:
+		dumpwriter = csv.writer(sys.stdout,delimiter=delimiter,quotechar=qualifier,quoting=csv.QUOTE_MINIMAL)
+       		dumpwriter.writerow([user,password])
