@@ -46,8 +46,8 @@ if args.upload:
 	outfile = open(datapath + '/Data/BreachData.txt','w')
 
 for line in f:
-	if args.type == 'dt':
-		# DT format is: Email;Password
+	if args.type == 'semi':
+		# Semi format is: Email;Password
 		if line.count(';') < 1:
 			continue
 		user=line.split(';')[0].rstrip('\n')
