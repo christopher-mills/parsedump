@@ -46,6 +46,12 @@ if args.upload:
 	outfile = open(datapath + '/Data/BreachData.txt','w')
 
 for line in f:
+	if args.type == 'comma':
+		# Comma format is: Email,Password
+                if line.count(',') < 1:
+                        continue
+                user=line.split(',')[0].rstrip('\n')
+                password=line.split(',')[1].rstrip('\n')
 	if args.type == 'semi':
 		# Semi format is: Email;Password
 		if line.count(';') < 1:
