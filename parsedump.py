@@ -58,6 +58,12 @@ for line in f:
 			continue
 		user=line.split(';')[0].rstrip('\n')
 		password=line.split(';')[1].rstrip('\n')
+        if args.type == 'colon':
+                # Semi format is: Email;Password
+                if line.count(':') < 1:
+                        continue
+                user=line.split(':')[0].rstrip('\n')
+                password=line.split(':')[1].rstrip('\n')
 	if args.type == 'pony':
 		# Pony format is: protocol://username:password@site
 		userPass=line.partition('//')[2].rpartition('@')[0]
