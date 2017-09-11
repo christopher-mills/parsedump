@@ -8,16 +8,25 @@ parser.add_argument('-d','--delimiter',type=str,help='Specify a delimiter (defau
 parser.add_argument('-q','--qualifier',type=str,help='Specify a text qualifier to surround the fields (default is double quotes)')
 parser.add_argument('-o','--outfile',type=str,help='Specify an output file, otherwise defaults to STDOUT')
 parser.add_argument('-u','--upload',action='store_true',help='Upload data to MACE')
+
+# Arguments to pass to DataUploader for MACE
+parser.add_argument('--abuse-vector',type=str,help='Specify an abuse vector')
+parser.add_argument('--botnet-name',type=str,help='Specify a botnet name')
+parser.add_argument('--breach-actor',type=str,help='Specify a breach actor')
 parser.add_argument('--breach-method',type=str,help='Specify a breach method')
+parser.add_argument('--breach-notes',type=str,help='Add some notes on the breach')
+parser.add_argument('--breach-source',type=str,help='Specify a breach source')
+parser.add_argument('--breach-target',type=str,help='Specify the target of the breach')
 parser.add_argument('-c','--cert',type=str,help='Specify the path to your MACE cert')
 parser.add_argument('-s','--string',type=str,help='Specify the path to your MACE connection string')
 parser.add_argument('-p','--path',type=str,help='Specify the path to the MACE uploader script')
 parser.add_argument('--datapath',type=str,help='Specify the path to write data for MACE upload. Default is pwd')
 args = parser.parse_args()
-f = open(args.filename, 'r')
+f = open(args.filename, 'rU')
 delimiter = '|'
 qualifier = '"'
 breachMethod = 'Unknown'
+breachSource = 'Unknown'
 macePath = '~/mace/DataUploader.py'
 if args.delimiter:
 	delimiter = args.delimiter
@@ -27,6 +36,8 @@ if args.outfile:
 	outfile = open(args.outfile,'w')
 if args.breach_method:
 	breachMethod = args.breach_method
+if args.breach_source:
+        breachSource = args.breach_source
 if args.path:
 	macePath = args.path
 if args.cert:
@@ -42,7 +53,7 @@ if args.upload:
 	if not os.path.exists(datapath + '/Data'):
 		os.makedirs(datapath + '/Data')
 	with open(datapath + '/BreachMetadata.json', 'w') as breachMetadataFile:
-		json.dump({'AbuseVector': '', 'BotNetName': '', 'BreachActor': '', 'BreachCreationTime': strftime("%Y-%m-%dT%H:%M:%S +00:00", gmtime()),'BreachMethod': breachMethod,'BreachNotes': '','BreachSource': args.type,'BreachTarget': '','BreachTime': strftime("%Y-%m-%dT%H:%M:%S +00:00", gmtime()),'HashType': '','PartnerIdentifier': '','SecretFormat': 'Clear'},breachMetadataFile, sort_keys=True, indent=4)
+		json.dump({'AbuseVector': '', 'BotNetName': '', 'BreachActor': '', 'BreachCreationTime': strftime("%Y-%m-%dT%H:%M:%S +00:00", gmtime()),'BreachMethod': breachMethod,'BreachNotes': '','BreachSource': breachSource,'BreachTarget': '','BreachTime': strftime("%Y-%m-%dT%H:%M:%S +00:00", gmtime()),'HashType': '','PartnerIdentifier': '','SecretFormat': 'Clear'},breachMetadataFile, sort_keys=True, indent=4)
 	outfile = open(datapath + '/Data/BreachData.txt','w')
 
 for line in f:
